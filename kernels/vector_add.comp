@@ -1,6 +1,6 @@
 #version 450
 
-layout(local_size_x = 1) in;
+layout(local_size_x = 256) in;  // Increased from 1 to 256
 
 layout(binding = 0) buffer InputA {
     float a[];
@@ -16,5 +16,8 @@ layout(binding = 2) buffer Output {
 
 void main() {
     uint idx = gl_GlobalInvocationID.x;
-    result[idx] = a[idx] + b[idx];
+    // Ensure we don't go out of bounds
+    if (idx < a.length()) {
+        result[idx] = a[idx] + b[idx];
+    }
 }
